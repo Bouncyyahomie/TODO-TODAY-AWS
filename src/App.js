@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { Amplify, DataStore } from 'aws-amplify';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { Task } from './models';
 
-function App() {
+import { Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { useEffect } from 'react';
+
+import awsExports from './aws-exports';
+Amplify.configure(awsExports);
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Authenticator>
+      <IonPage>
+        {({ signOut, user }) => (
+          <main>
+            <h1>Hello {user.username}</h1>
+            <button onClick={signOut}>Sign out</button>
+          </main>
+        )}
+      </IonPage>
+    </Authenticator>
   );
 }
 
-export default App;
+function ListTask() {
+  useEffect(() => {
+    const loadData = async () => {
+      const posts = await DataStore.query()
+    }
+  })
+  return (
+    <></>
+  )
+}
