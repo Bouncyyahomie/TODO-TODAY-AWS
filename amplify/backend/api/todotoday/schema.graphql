@@ -2,4 +2,4 @@ type Task @model @auth(rules: [{allow: private}]) {
   id: ID!
   title: String!
   description: String!
-}
+} 
