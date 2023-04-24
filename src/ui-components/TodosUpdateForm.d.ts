@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Todos } from "../models";
 export declare type ValidationResponse = {
@@ -17,11 +17,13 @@ export declare type TodosUpdateFormInputValues = {
     title?: string;
     description?: string;
     author?: string;
+    done?: boolean;
 };
 export declare type TodosUpdateFormValidationValues = {
     title?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
     author?: ValidationFunction<string>;
+    done?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TodosUpdateFormOverridesProps = {
@@ -29,6 +31,7 @@ export declare type TodosUpdateFormOverridesProps = {
     title?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
     author?: PrimitiveOverrideProps<TextFieldProps>;
+    done?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type TodosUpdateFormProps = React.PropsWithChildren<{
     overrides?: TodosUpdateFormOverridesProps | undefined | null;

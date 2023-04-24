@@ -3,4 +3,6 @@ type Todos @model @auth(rules: [{allow: private}]) {
   title: String!
   description: String!
   author: String!
-} 
+  done: Boolean
+}
+ 

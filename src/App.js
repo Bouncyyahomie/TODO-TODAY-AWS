@@ -1,7 +1,7 @@
 import { Amplify, DataStore } from 'aws-amplify';
 import { Todos } from './models';
 
-import { Authenticator, Card } from '@aws-amplify/ui-react';
+import { Authenticator, Card, TextField, Button, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { useEffect, useState } from 'react';
 
@@ -13,9 +13,9 @@ export default function App() {
     <Authenticator>
       {({ signOut, user }) => (
         <main>
-          <ListTodos author={user.username}/>
           <h1>Hello {user.username}</h1>
-          <button onClick={signOut}>Sign out</button>
+          <ListTodos author={user.username}/>
+          <Button onClick={signOut}>Sign out</Button>
         </main>
       )}
     </Authenticator>
@@ -24,6 +24,9 @@ export default function App() {
 
 function ListTodos(author) {
   const [ data, setData ] = useState([])
+  const [ titleInputValue, setTitleInputValue ] = useState('')
+  const [ descriptionInputValue, setDescriptionInputValue ] = useState('')
+
   useEffect(() => {
     const loadData = async () => {
       const todos = await DataStore.query(Todos, (todo) => todo.author.eq(author.author))
@@ -33,29 +36,48 @@ function ListTodos(author) {
     loadData()
 
   })
+
+  const addTodo = async () => {
+    if (titleInputValue.trim() === '') return
+    if (descriptionInputValue.trim() === '') return
+    const newTodo = await DataStore.save(new Todos({
+      title: titleInputValue,
+      description: descriptionInputValue,
+      author: author.author,
+      done: false
+    }))
+    setData([...data, newTodo])
+    setTitleInputValue('')
+    setDescriptionInputValue('')
+  }
+
+  const toggleTodo = async (id) => {
+    const todo = await DataStore.query(Todos, id)
+    await DataStore.save(Todos.copyOf(todo, updated => {
+      updated.done = !updated.done
+    }))
+    loadData()
+  }
+
+  const loadData = async () => {
+    const todos = await DataStore.query(Todos, (todo) => todo.author.eq(author.author))
+    setData(todos)
+  }
+  
   return (
     <>
       { data.map((t) => 
-      <Card>
-        {JSON.stringify(t)}
-      </Card>) }
+        <Card key={t.id}>
+          <Text>{t.title}</Text>
+          <Text>{t.description}</Text>
+          <Button onClick={() => toggleTodo(t.id)}>{t.done ? 'Done' : 'Undone'}</Button>
+        </Card>) 
+      }
+      <Text>Title</Text>
+      <TextField value={titleInputValue} onChange={(e) => setTitleInputValue(e.target.value)} />
+      <Text>Description</Text>
+      <TextField value={descriptionInputValue} onChange={(e) => setDescriptionInputValue(e.target.value)} />
+      <Button onClick={addTodo}>Add Todo</Button>
     </>
   )
-}
-
-function CreateTodo(title, description, author) {
-  useEffect(() => {
-    const createData = async () => {
-      await DataStore.save(
-        new Todos({
-          title: title,
-          description: description,
-          author: author.author
-        })
-      )
-    }
-
-    createData()
-
-  })
 }

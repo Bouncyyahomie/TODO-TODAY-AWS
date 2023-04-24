@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SwitchField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Todos } from "../models";
 import { fetchByPath, validateField } from "./utils";
@@ -27,12 +33,14 @@ export default function TodosUpdateForm(props) {
     title: "",
     description: "",
     author: "",
+    done: false,
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
   const [author, setAuthor] = React.useState(initialValues.author);
+  const [done, setDone] = React.useState(initialValues.done);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = todosRecord
@@ -41,6 +49,7 @@ export default function TodosUpdateForm(props) {
     setTitle(cleanValues.title);
     setDescription(cleanValues.description);
     setAuthor(cleanValues.author);
+    setDone(cleanValues.done);
     setErrors({});
   };
   const [todosRecord, setTodosRecord] = React.useState(todosModelProp);
@@ -58,6 +67,7 @@ export default function TodosUpdateForm(props) {
     title: [{ type: "Required" }],
     description: [{ type: "Required" }],
     author: [{ type: "Required" }],
+    done: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -88,6 +98,7 @@ export default function TodosUpdateForm(props) {
           title,
           description,
           author,
+          done,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -146,6 +157,7 @@ export default function TodosUpdateForm(props) {
               title: value,
               description,
               author,
+              done,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -172,6 +184,7 @@ export default function TodosUpdateForm(props) {
               title,
               description: value,
               author,
+              done,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -198,6 +211,7 @@ export default function TodosUpdateForm(props) {
               title,
               description,
               author: value,
+              done,
             };
             const result = onChange(modelFields);
             value = result?.author ?? value;
@@ -212,6 +226,33 @@ export default function TodosUpdateForm(props) {
         hasError={errors.author?.hasError}
         {...getOverrideProps(overrides, "author")}
       ></TextField>
+      <SwitchField
+        label="Done"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={done}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              author,
+              done: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.done ?? value;
+          }
+          if (errors.done?.hasError) {
+            runValidationTasks("done", value);
+          }
+          setDone(value);
+        }}
+        onBlur={() => runValidationTasks("done", done)}
+        errorMessage={errors.done?.errorMessage}
+        hasError={errors.done?.hasError}
+        {...getOverrideProps(overrides, "done")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

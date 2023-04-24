@@ -15,6 +15,7 @@ type EagerTodos = {
   readonly title: string;
   readonly description: string;
   readonly author: string;
+  readonly done?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -28,6 +29,7 @@ type LazyTodos = {
   readonly title: string;
   readonly description: string;
   readonly author: string;
+  readonly done?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
