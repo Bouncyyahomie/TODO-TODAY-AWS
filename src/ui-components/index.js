@@ -5,5 +5,5 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
-export { default as TaskCreateForm } from "./TaskCreateForm";
-export { default as TaskUpdateForm } from "./TaskUpdateForm";
+export { default as TodosCreateForm } from "./TodosCreateForm";
+export { default as TodosUpdateForm } from "./TodosUpdateForm";
