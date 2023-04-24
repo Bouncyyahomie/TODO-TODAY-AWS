@@ -1,5 +1,8 @@
-type Task @model @auth(rules: [{allow: private}]) {
+type Todos @model @auth(rules: [{allow: private}]) {
   id: ID!
   title: String!
   description: String!
-} 
+  author: String!
+  done: Boolean
+}
+ 

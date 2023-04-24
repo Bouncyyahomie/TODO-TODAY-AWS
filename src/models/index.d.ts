@@ -6,32 +6,36 @@ import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
 
 
-type EagerTask = {
+type EagerTodos = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Task, 'id'>;
+    identifier: ManagedIdentifier<Todos, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
   readonly title: string;
   readonly description: string;
+  readonly author: string;
+  readonly done?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyTask = {
+type LazyTodos = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Task, 'id'>;
+    identifier: ManagedIdentifier<Todos, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
   readonly title: string;
   readonly description: string;
+  readonly author: string;
+  readonly done?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type Task = LazyLoading extends LazyLoadingDisabled ? EagerTask : LazyTask
+export declare type Todos = LazyLoading extends LazyLoadingDisabled ? EagerTodos : LazyTodos
 
-export declare const Task: (new (init: ModelInit<Task>) => Task) & {
-  copyOf(source: Task, mutator: (draft: MutableModel<Task>) => MutableModel<Task> | void): Task;
+export declare const Todos: (new (init: ModelInit<Todos>) => Todos) & {
+  copyOf(source: Todos, mutator: (draft: MutableModel<Todos>) => MutableModel<Todos> | void): Todos;
 }
