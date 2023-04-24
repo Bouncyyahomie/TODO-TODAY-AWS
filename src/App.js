@@ -63,6 +63,11 @@ function ListTodos(author) {
     const todos = await DataStore.query(Todos, (todo) => todo.author.eq(author.author))
     setData(todos)
   }
+
+  const deleteTodo = async (id) => {
+    await DataStore.delete(Todos, id)
+    loadData()
+  }
   
   return (
     <>
@@ -71,6 +76,7 @@ function ListTodos(author) {
           <Text>{t.title}</Text>
           <Text>{t.description}</Text>
           <Button onClick={() => toggleTodo(t.id)}>{t.done ? 'Done' : 'Undone'}</Button>
+          <Button onClick={() => deleteTodo(t.id)}>Delete</Button>
         </Card>) 
       }
       <Text>Title</Text>
