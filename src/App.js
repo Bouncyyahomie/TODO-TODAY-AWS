@@ -1,5 +1,5 @@
 import { Amplify, DataStore } from 'aws-amplify';
-import { Task } from './models';
+import { Todos } from './models';
 
 import { Authenticator, Card } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -13,7 +13,7 @@ export default function App() {
     <Authenticator>
       {({ signOut, user }) => (
         <main>
-          <ListTask></ListTask>
+          <ListTodos author={user.username}/>
           <h1>Hello {user.username}</h1>
           <button onClick={signOut}>Sign out</button>
         </main>
@@ -22,12 +22,12 @@ export default function App() {
   );
 }
 
-function ListTask() {
+function ListTodos(author) {
   const [ data, setData ] = useState([])
   useEffect(() => {
     const loadData = async () => {
-      const tasks = await DataStore.query(Task)
-      setData(tasks)
+      const todos = await DataStore.query(Todos, (todo) => todo.author.eq(author.author))
+      setData(todos)
     }
 
     loadData()
@@ -41,4 +41,21 @@ function ListTask() {
       </Card>) }
     </>
   )
+}
+
+function CreateTodo(title, description, author) {
+  useEffect(() => {
+    const createData = async () => {
+      await DataStore.save(
+        new Todos({
+          title: title,
+          description: description,
+          author: author.author
+        })
+      )
+    }
+
+    createData()
+
+  })
 }
